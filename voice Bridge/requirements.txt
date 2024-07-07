@@ -1,0 +1,206 @@
+'''Use advanced speech recognition models like Whisper by OpenAI or Wav2Vec by Facebook AI for better accuracy and handling of different accents and slangs.'''
+
+
+
+
+
+
+import speech_recognition as sr
+from src.translate import translate_text
+from src.text_to_speech import text_to_speech
+from src.play_audio import play_audio
+
+import time
+import msvcrt  # Import the msvcrt module
+
+def capture_audio():
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Adjusting for ambient noise...")
+        recognizer.adjust_for_ambient_noise(source)
+        print("Please say something")
+        audio = recognizer.listen(source, timeout=10, phrase_time_limit=10)
+    return audio
+
+def speech_to_text(audio, lang='en-US'):
+    recognizer = sr.Recognizer()
+    try:
+        text = recognizer.recognize_google(audio, language=lang)
+        return text
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print(f"Could not request results from Google Speech Recognition service; {e}")
+    return ""
+
+def get_language_code(language=None):
+    language_codes = {
+        'English': 'en',
+        'Telugu': 'te',
+        'Hindi': 'hi',
+        'Tamil': 'ta',
+        'Spanish': 'es',
+        'French': 'fr',
+        'German': 'de',
+        'Chinese': 'zh',
+        'Japanese': 'ja',
+        'Korean': 'ko',
+        'Portuguese': 'pt',
+        'Russian': 'ru',
+        'Arabic': 'ar',
+        'Bengali': 'bn',
+        'Gujarati': 'gu',
+        'Kannada': 'kn',
+        'Malayalam': 'ml',
+        'Marathi': 'mr',
+        'Punjabi': 'pa',
+        'Urdu': 'ur',
+        'Vietnamese': 'vi',
+        'Thai': 'th',
+        'Italian': 'it',
+        'Dutch': 'nl',
+        # Add more languages and their codes as needed
+    }
+    if language:
+        return language_codes.get(language, 'en')
+    return language_codes
+
+def one_way_communication(source_lang, target_lang):
+    print("Press 'e' to exit the program.")
+    while True:
+        try:
+            if msvcrt.kbhit() and msvcrt.getch() == b'e':
+                print("Exiting program.")
+                break
+
+            print("Listening...")
+            audio = capture_audio()
+
+            print("Recognizing speech...")
+            text = speech_to_text(audio, lang=source_lang)
+            print(f"You said: {text}")
+
+            print("Translating...")
+            translated_text = translate_text(text, dest_lang=target_lang)
+            print(f"Translated text: {translated_text}")
+
+            print("Converting text to speech...")
+            audio_fp = text_to_speech(translated_text, lang=target_lang)
+
+            print("Playing audio...")
+            play_audio(audio_fp)
+
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            continue
+
+        time.sleep(1)
+
+def one_to_one_communication(source_lang1, target_lang1, source_lang2, target_lang2):
+    print("Press 'e' to exit the program.")
+    while True:
+        try:
+            if msvcrt.kbhit() and msvcrt.getch() == b'e':
+                print("Exiting program.")
+                break
+
+            for speaker in [1, 2]:
+                if speaker == 1:
+                    print(f"Speaker 1 ({source_lang1}), Listening...")
+                    source_lang = source_lang1
+                    target_lang = target_lang1
+                else:
+                    print(f"Speaker 2 ({source_lang2}), Listening...")
+                    source_lang = source_lang2
+                    target_lang = target_lang2
+                    
+                audio = capture_audio()
+
+                print(f"Recognizing speech from Speaker {speaker}...")
+                text = speech_to_text(audio, lang=source_lang)
+                print(f"Speaker {speaker} said: {text}")
+
+                print(f"Translating from {source_lang} to {target_lang}...")
+                translated_text = translate_text(text, dest_lang=target_lang)
+                print(f"Translated text: {translated_text}")
+
+                print("Converting translated text to speech...")
+                audio_fp = text_to_speech(translated_text, lang=target_lang)
+
+                print("Playing audio...")
+                play_audio(audio_fp)
+
+        except Exception as e:
+            print(f"Error occurred: {str(e)}")
+            continue
+
+        time.sleep(1)
+
+def main():
+    print("Select communication mode:")
+    print("1. One-way communication")
+    print("2. One-to-one communication")
+    mode = input("Enter 1 or 2: ").strip()
+
+    language_codes = get_language_code()
+    print("Available languages:")
+    for language in language_codes.keys():
+        print(language)
+
+    print("Select the source language:")
+    source_language = input("Source language: ").strip()
+    source_lang_code = get_language_code(source_language)
+
+    print("Select the target language:")
+    target_language = input("Target language: ").strip()
+    target_lang_code = get_language_code(target_language)
+
+    if mode == '1':
+        one_way_communication(source_lang_code, target_lang_code)
+    elif mode == '2':
+        print("Select the source language for Speaker 2:")
+        source_language2 = input("Source language for Speaker 2: ").strip()
+        source_lang_code2 = get_language_code(source_language2)
+
+        print("Select the target language for Speaker 2:")
+        target_language2 = input("Target language for Speaker 2: ").strip()
+        target_lang_code2 = get_language_code(target_language2)
+
+        one_to_one_communication(source_lang_code, target_lang_code, source_lang_code2, target_lang_code2)
+    else:
+        print("Invalid selection. Exiting program.")
+
+if __name__ == "__main__":
+    main()
+==========================================
+play_audio.py
+import pygame
+import io
+
+def play_audio(audio_fp):
+    audio_fp.seek(0)
+    pygame.mixer.init()
+    pygame.mixer.music.load(audio_fp)
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10) 
+        ================================================================
+
+        text_to_speech.py
+        from gtts import gTTS
+import io
+
+def text_to_speech(text, lang='es'):
+    tts = gTTS(text, lang=lang)
+    audio_fp = io.BytesIO()
+    tts.write_to_fp(audio_fp)
+    audio_fp.seek(0)
+    return audio_fp
+========================================================
+translate.py
+from googletrans import Translator
+
+def translate_text(text, dest_lang='es'):
+    translator = Translator()
+    translated = translator.translate(text, dest=dest_lang)
+    return translated.text
