@@ -12,6 +12,7 @@ Ensure you have a requirements.txt file listing all necessary packages. If it ex
 
 **pip install -r requirements.txt**
 
-**Run the Application:** Execute the main Python file:
+**Run the Application:** 
+Execute the main Python file:
 
 **python main.py**
