@@ -7,7 +7,8 @@ Open your terminal or command prompt and execute:
 
 **cd VoiceBridge**
 
-**Install Dependencies:** Ensure you have a requirements.txt file listing all necessary packages. If it exists, run:
+**Install Dependencies:**
+Ensure you have a requirements.txt file listing all necessary packages. If it exists, run:
 
 **pip install -r requirements.txt**
 
