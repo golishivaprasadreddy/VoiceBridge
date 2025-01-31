@@ -3,6 +3,7 @@ To run the Python application from the VoiceBridge repository, follow these step
 **Clone the Repository:** Open your terminal or command prompt and execute:
 
 **git clone https://github.com/golishivaprasadreddy/VoiceBridge.git**
+
 **cd VoiceBridge**
 
 **Install Dependencies:** Ensure you have a requirements.txt file listing all necessary packages. If it exists, run:
