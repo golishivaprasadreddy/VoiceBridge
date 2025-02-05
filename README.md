@@ -17,5 +17,5 @@ Ensure you have a requirements.txt file listing all necessary packages. If it ex
 
 Execute the main Python file:
 
-**python main.py**
+**python main.py** 
 
