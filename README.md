@@ -16,6 +16,6 @@ Ensure you have a requirements.txt file listing all necessary packages. If it ex
 **Run the Application:** 
 
 Execute the main Python file:
-
+ 
 **python main.py** 
 
