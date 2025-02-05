@@ -19,4 +19,3 @@ Execute the main Python file:
 
 **python main.py**
 
-ust run python main file after installing the dependencies
