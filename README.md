@@ -2,7 +2,8 @@
 ```markdown
 # VoiceBridge
 
-VoiceBridge is a speech-to-speech translation tool that captures audio, translates it into a target language, and plays the translated audio.
+VoiceBridge is a speech-to-speech translation tool that captures audio,
+ translates it into a target language, and plays the translated audio.
 
 ## Prerequisites
 - Python 3.11 or earlier (recommended)
